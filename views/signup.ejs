@@ -26,7 +26,7 @@
 <script>
   const form = document.querySelector('form');
   const emailError = document.querySelector('.email.error');
-  const passwordError = document.querySelector('.password.error');
+  const passwordError = document.querySelector('.password');
 
   form.addEventListener('submit', async (e) => {
     try {
@@ -34,7 +34,6 @@
 
       emailError.textContent = '';
       passwordError.textContent = '';
-
       const response = await fetch('/signup', {
         headers: {
           'Content-Type': 'application/json',

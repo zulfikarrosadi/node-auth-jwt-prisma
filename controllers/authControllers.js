@@ -3,12 +3,22 @@ const prisma = new PrismaClient();
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { contextsKey } = require('express-validator/src/base');
 
 const handleError = (error) => {
   const errorMessage = {
     email: '',
     password: '',
   };
+
+  // login error validation
+  if (error.message === 'inccorect email') {
+    errorMessage.email = 'This email is not register yet';
+  } else if (error.message === 'incorrect password') {
+    errorMessage.password = 'Incorrect password';
+  } else {
+    return errorMessage;
+  }
 
   // check email unique constraint violation
   if (error.code === 'P2002') {
@@ -69,15 +79,18 @@ const login_post = async (req, res) => {
       where: { email: req.body.email },
     });
 
-    if (typeof user !== undefined) {
+    if (user) {
       const isAuth = await bcrypt.compare(req.body.password, user.password);
 
-      if (isAuth) return res.status(200).json(user.id);
+      if (isAuth) return res.status(200).json({ user: user.id });
       throw Error('incorrect password');
     } else {
-      throw Error('This e-mail not register yet');
+      throw Error('incorrect email');
     }
-  } catch (error) {}
+  } catch (error) {
+    const errors = handleError(error);
+    return res.status(400).json({ errors });
+  }
 };
 
 module.exports = { signup_get, signup_post, login_get, login_post };

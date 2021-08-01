@@ -11,7 +11,7 @@
     <li>
       <label for="password">Password</label>
       <input type="password" name="password" id="password" required />
-      <div class="email error"></div>
+      <div class="password error"></div>
     </li>
     <button>Log In</button>
   </ul>
@@ -35,8 +35,13 @@
         }),
       });
       const result = await response.json();
-      console.log(result);
-    } catch (error) {}
+
+      if (result.hasOwnProperty('user')) window.location = '/';
+      if (result.hasOwnProperty('errors')) throw result;
+    } catch (error) {
+      emailError.textContent = error.errors.email;
+      passwordError.textContent = error.errors.password;
+    }
   });
 </script>
 <%- include('partials/footer'); -%>
