@@ -35,7 +35,7 @@
         }),
       });
       const result = await response.json();
-
+      console.log(result);
       if (result.hasOwnProperty('user')) window.location = '/';
       if (result.hasOwnProperty('errors')) throw result;
     } catch (error) {
