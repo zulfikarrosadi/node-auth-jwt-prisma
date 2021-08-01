@@ -63,4 +63,21 @@ const signup_post = async (req, res) => {
   }
 };
 
-module.exports = { signup_get, signup_post, login_get };
+const login_post = async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email: req.body.email },
+    });
+
+    if (typeof user !== undefined) {
+      const isAuth = await bcrypt.compare(req.body.password, user.password);
+
+      if (isAuth) return res.status(200).json(user.id);
+      throw Error('incorrect password');
+    } else {
+      throw Error('This e-mail not register yet');
+    }
+  } catch (error) {}
+};
+
+module.exports = { signup_get, signup_post, login_get, login_post };

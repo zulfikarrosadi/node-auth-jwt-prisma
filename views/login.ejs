@@ -19,13 +19,24 @@
 
 <script>
   const form = document.querySelector('form');
+  const emailError = document.querySelector('.email.error');
+  const passwordError = document.querySelector('.password.error');
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
+  form.addEventListener('submit', async (e) => {
+    try {
+      e.preventDefault();
 
-    const email = form.email.value;
-    const password = form.password.value;
-    console.log(email, password);
+      const response = await fetch('/login', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'post',
+        body: JSON.stringify({
+          email: form.email.value,
+          password: form.password.value,
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {}
   });
 </script>
 <%- include('partials/footer'); -%>
