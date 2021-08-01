@@ -34,6 +34,7 @@ const createToken = (id) => {
 };
 
 const signup_get = (req, res) => res.render('signup');
+const login_get = (req, res) => res.render('login');
 
 const signup_post = async (req, res) => {
   try {
@@ -62,4 +63,4 @@ const signup_post = async (req, res) => {
   }
 };
 
-module.exports = { signup_get, signup_post };
+module.exports = { signup_get, signup_post, login_get };
