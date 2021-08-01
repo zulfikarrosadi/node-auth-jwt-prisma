@@ -4,8 +4,6 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// TODO: node(5932) Warning: Accessing non-existent property 'use' of module exports inside circular dependency
-
 const handleError = (error) => {
   const errorMessage = {
     email: '',
@@ -29,7 +27,10 @@ const handleError = (error) => {
 };
 
 const createToken = (id) => {
-  return jwt.sign({ id }, process.env.SECRET_KEY);
+  const HALF_DAY_IN_SECOND = 60 * 60 * 12;
+  return jwt.sign({ id }, process.env.SECRET_KEY, {
+    expiresIn: HALF_DAY_IN_SECOND,
+  });
 };
 
 const signup_get = (req, res) => res.render('signup');
@@ -54,11 +55,10 @@ const signup_post = async (req, res) => {
       sameSite: 'lax',
       httpOnly: true,
     });
-
     return res.status(201).json({ user: user.id });
   } catch (error) {
     const errors = handleError(error);
-    return res.status(400).json(errors);
+    return res.status(400).json({ errors });
   }
 };
 

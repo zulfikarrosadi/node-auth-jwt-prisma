@@ -25,5 +25,34 @@
 
 <script>
   const form = document.querySelector('form');
+  const emailError = document.querySelector('.email.error');
+  const passwordError = document.querySelector('.password.error');
+
+  form.addEventListener('submit', async (e) => {
+    try {
+      e.preventDefault();
+
+      emailError.textContent = '';
+      passwordError.textContent = '';
+
+      const response = await fetch('/signup', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'post',
+        body: JSON.stringify({
+          email: form.email.value,
+          password: form.password.value,
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.hasOwnProperty('errors')) throw result;
+      if (result.hasOwnProperty('user')) window.location = '/';
+    } catch (error) {
+      emailError.textContent = error.errors.email;
+      passwordError.textContent = error.errors.password;
+    }
+  });
 </script>
 <%- include('partials/footer'); -%>
