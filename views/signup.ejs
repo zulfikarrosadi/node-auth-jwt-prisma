@@ -1,0 +1,29 @@
+<%- include('partials/header'); -%>
+
+<form action="" method="post">
+  <h2>Sign Up</h2>
+  <ul>
+    <li>
+      <label for="email">E-mail</label>
+      <div class="email error"></div>
+      <input type="text" name="email" id="email" required autocomplete="off" />
+    </li>
+    <li>
+      <label for="password">Password</label>
+      <div class="password error"></div>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        required
+        autocomplete="off"
+      />
+    </li>
+    <button>Sign Up</button>
+  </ul>
+</form>
+
+<script>
+  const form = document.querySelector('form');
+</script>
+<%- include('partials/footer'); -%>
