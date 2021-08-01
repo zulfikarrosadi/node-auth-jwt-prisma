@@ -12,11 +12,11 @@ const handleError = (error) => {
   };
 
   // login error validation
-  if (error.message === 'inccorect email') {
+  if (error.message === 'incorrect email') {
     errorMessage.email = 'This email is not register yet';
+    return errorMessage;
   } else if (error.message === 'incorrect password') {
     errorMessage.password = 'Incorrect password';
-  } else {
     return errorMessage;
   }
 
@@ -78,11 +78,18 @@ const login_post = async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { email: req.body.email },
     });
-
     if (user) {
       const isAuth = await bcrypt.compare(req.body.password, user.password);
 
-      if (isAuth) return res.status(200).json({ user: user.id });
+      if (isAuth) {
+        const token = createToken(user.id);
+        res.cookie('jerawat', token, {
+          sameSite: 'lax',
+          httpOnly: true,
+        });
+
+        return res.status(200).json({ user: user.id });
+      }
       throw Error('incorrect password');
     } else {
       throw Error('incorrect email');
