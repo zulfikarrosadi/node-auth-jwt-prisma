@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const authValidation = require('../middlewares/authValidation');
+const authValidation = require('../const/authValidation');
 
 const {
   signup_get,

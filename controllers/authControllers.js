@@ -1,9 +1,9 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { contextsKey } = require('express-validator/src/base');
+
+const prisma = new PrismaClient();
 
 const handleError = (error) => {
   const errorMessage = {
