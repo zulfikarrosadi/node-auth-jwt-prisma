@@ -78,7 +78,7 @@ const login_post = async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { email: req.body.email },
     });
-    if (user) {
+    if (typeof user !== undefined && user) {
       const isAuth = await bcrypt.compare(req.body.password, user.password);
 
       if (isAuth) {
@@ -87,13 +87,11 @@ const login_post = async (req, res) => {
           sameSite: 'lax',
           httpOnly: true,
         });
-
         return res.status(200).json({ user: user.id });
       }
       throw Error('incorrect password');
-    } else {
-      throw Error('incorrect email');
     }
+    throw Error('incorrect email');
   } catch (error) {
     const errors = handleError(error);
     return res.status(400).json({ errors });
